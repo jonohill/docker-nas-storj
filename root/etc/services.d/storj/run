@@ -1,11 +1,15 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
+set -e
+
 # Wait for mount
 while ! mount | grep "$RCLONE_MOUNT_DIR"; do
     echo "Waiting for mount..."
     sleep 5
 done
+
+cd /app
 
 # The original image's entrypoint
 if [[ -n $WALLET_FEATURES ]]; then
@@ -13,3 +17,5 @@ if [[ -n $WALLET_FEATURES ]]; then
 else
     exec /entrypoint
 fi
+
+cd -
