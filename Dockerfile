@@ -12,4 +12,4 @@ COPY root/ /
 # Run once to cause binaries to be downloaded
 RUN /entrypoint
 
-ENTRYPOINT /init
+ENTRYPOINT ["/init"]
