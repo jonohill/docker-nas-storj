@@ -13,9 +13,9 @@ cd /app
 
 # The original image's entrypoint
 if [[ -n $WALLET_FEATURES ]]; then
-    exec /entrypoint "--operator.wallet-features=$WALLET_FEATURES"
+    /entrypoint "--operator.wallet-features=$WALLET_FEATURES"
 else
-    exec /entrypoint
+    /entrypoint
 fi
 
 if [[ -n $SETUP ]]; then
