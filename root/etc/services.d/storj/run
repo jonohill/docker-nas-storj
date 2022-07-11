@@ -8,4 +8,8 @@ while ! mount | grep "$RCLONE_MOUNT_DIR"; do
 done
 
 # The original image's entrypoint
-exec /entrypoint
+if [[ -n $WALLET_FEATURES ]]; then
+    exec /entrypoint "--operator.wallet-features=$WALLET_FEATURES"
+else
+    exec /entrypoint
+fi
