@@ -16,4 +16,11 @@ COPY root/ /
 # Run once to cause binaries to be downloaded
 RUN /entrypoint
 
+HEALTHCHECK \
+    --interval=30s \
+    --timeout=5s \
+    --start-period=30s \
+    --retries=1 \
+    CMD /healthcheck.sh || exit 1
+
 ENTRYPOINT ["/init"]
