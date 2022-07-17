@@ -9,7 +9,7 @@ while ! mount | grep "$RCLONE_MOUNT_DIR"; do
     sleep 5
 done
 
-# cd /app
+cd /app
 
 # Loosely based on the original /entrypoint
 # https://github.com/storj/storj/blob/main/cmd/storagenode/docker/entrypoint
