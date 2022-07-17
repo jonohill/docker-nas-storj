@@ -1,0 +1,28 @@
+diff --git a/storage/filestore/dir_unix.go b/storage/filestore/dir_unix.go
+index ac5a08e..32f112e 100644
+--- a/storage/filestore/dir_unix.go
++++ b/storage/filestore/dir_unix.go
+@@ -10,6 +10,7 @@ import (
+ 	"errors"
+ 	"fmt"
+ 	"os"
++	"strings"
+ 
+ 	"golang.org/x/sys/unix"
+ )
+@@ -21,6 +22,15 @@ func isBusy(err error) bool {
+ 
+ func diskInfoFromPath(path string) (info DiskInfo, err error) {
+ 	var stat unix.Statfs_t
++
++	// Stupid HACK. Redirect config to blob dir
++	if strings.HasPrefix(path, "/app/config") {
++		blob_dir := os.Getenv("BLOB_DIR")
++		if len(blob_dir) > 0 {
++			path = blob_dir
++		}
++	}
++
+ 	err = unix.Statfs(path, &stat)
+ 	if err != nil {
+ 		return DiskInfo{"", -1}, err

@@ -9,18 +9,41 @@ while ! mount | grep "$RCLONE_MOUNT_DIR"; do
     sleep 5
 done
 
-cd /app
+# cd /app
 
-# The original image's entrypoint
-if [[ -n $WALLET_FEATURES ]]; then
-    /entrypoint "--operator.wallet-features=$WALLET_FEATURES"
-else
-    /entrypoint
-fi
+# Loosely based on the original /entrypoint
+# https://github.com/storj/storj/blob/main/cmd/storagenode/docker/entrypoint
 
-if [[ -n $SETUP ]]; then
+params=(
+    --config-dir config
+    --identity-dir identity
+    --metrics.app-suffix=-alpha
+    --metrics.interval=30m
+    --console.address=:14002
+)
+
+param() {
+    prefix="$1"
+    var_name="$2"
+
+    if [ "${!var_name}" != "" ]; then
+        params+=("${prefix}${!var_name}")
+    fi
+}
+
+param --storage.allocated-disk-space= STORAGE
+param --contact.external-address= ADDRESS
+param --operator.email= EMAIL
+param --operator.wallet= WALLET
+param --operator.wallet-features= WALLET_FEATURES
+
+
+if [ "${SETUP:-}" = "true" ]; then
+    echo "Running ./storagenode setup ${params[*]}"
+    ./storagenode setup "${params[@]}"
     echo "Waiting 60s after setup..."
     sleep 60
+else
+    echo "Running ./storagenode run ${params[*]}"
+    exec ./storagenode run "${params[@]}"
 fi
-
-cd -

@@ -2,7 +2,20 @@ FROM rclone/rclone:1.59.0 AS rclone
 
 FROM ghcr.io/jonohill/docker-s6-package:3.1.1.2 AS s6
 
-FROM storjlabs/storagenode:latest
+FROM golang AS storj_build
+
+# renovate: datasource=github-releases depName=storj/storj
+ARG STORJ_VERSION=v1.58.2
+
+WORKDIR /usr/src/app
+
+COPY hack.patch .
+RUN git clone --depth 1 --branch "${STORJ_VERSION}" https://github.com/storj/storj.git && \
+    cd storj && \
+    git apply ../hack.patch && \
+    go install -v ./cmd/storagenode
+
+FROM debian:stable-slim
 
 RUN apt-get update && apt-get install -y \
     fuse \
@@ -10,11 +23,9 @@ RUN apt-get update && apt-get install -y \
 
 COPY --from=s6 / /
 COPY --from=rclone /usr/local/bin/rclone /usr/local/bin/rclone
+COPY --from=storj_build /go/bin/storagenode /app/storagenode
 
 COPY root/ /
-
-# Run once to cause binaries to be downloaded
-RUN /entrypoint
 
 HEALTHCHECK \
     --interval=30s \
