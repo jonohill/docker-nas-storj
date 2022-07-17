@@ -1,13 +1,22 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
-umount "${BLOB_DIR}"
-mkdir -p "${BLOB_DIR}"
-exec rclone mount -v \
-    --config="$RCLONE_CONFIG" \
-    --vfs-read-chunk-size 100M \
-    --cache-dir "${RCLONE_MOUNT_CACHE_DIR}" \
-    --vfs-cache-mode full \
-    --vfs-cache-poll-interval 1h0m0s \
-    "${RCLONE_MOUNT_DIR}" \
-    "${BLOB_DIR}"
+pids=()
+
+for dir in blobs garbage temp trash; do
+    mount_dir="$STORAGE_DIR/$dir"
+    umount "${mount_dir}"
+    mkdir -p "${mount_dir}"
+    rclone mount -v \
+        --config="$RCLONE_CONFIG" \
+        --vfs-read-chunk-size 100M \
+        --cache-dir "${RCLONE_MOUNT_CACHE_DIR}/$dir" \
+        --vfs-cache-mode full \
+        --vfs-cache-poll-interval 1h0m0s \
+        "${RCLONE_BASE_DIR}/$dir" \
+        "${mount_dir}" \
+        &
+    pids+=($!)
+done
+
+wait -n "${pids[@]}"

@@ -17,9 +17,9 @@ index ac5a08e..32f112e 100644
 +
 +	// Stupid HACK. Redirect config to blob dir
 +	if strings.HasPrefix(path, "/app/config") {
-+		blob_dir := os.Getenv("BLOB_DIR")
-+		if len(blob_dir) > 0 {
-+			path = blob_dir
++		storage_dir := os.Getenv("STORAGE_DIR")
++		if len(storage_dir) > 0 {
++			path = storage_dir + "/blobs"
 +		}
 +	}
 +
