@@ -18,6 +18,7 @@ RUN git clone --depth 1 --branch "${STORJ_VERSION}" https://github.com/storj/sto
 FROM debian:stable-slim
 
 RUN apt-get update && apt-get install -y \
+    ca-certificates \
     fuse \
     && rm -rf /var/lib/apt/lists/*
 
