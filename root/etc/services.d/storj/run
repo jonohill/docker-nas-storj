@@ -4,9 +4,12 @@
 set -e
 
 # Wait for mount
-while ! mount | grep "$RCLONE_MOUNT_DIR"; do
-    echo "Waiting for mount..."
-    sleep 5
+for dir in blobs garbage temp trash; do
+    mount_dir="$STORAGE_DIR/$dir"
+    while ! mount | grep "$mount_dir"; do
+        echo "Waiting for mount..."
+        sleep 5
+    done
 done
 
 cd /app
