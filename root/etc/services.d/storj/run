@@ -4,12 +4,9 @@
 set -e
 
 # Wait for mount
-for dir in blobs garbage temp trash; do
-    mount_dir="$STORAGE_DIR/$dir"
-    while ! mount | grep "$mount_dir"; do
-        echo "Waiting for mount..."
-        sleep 5
-    done
+while ! mount | grep "$MOUNT_SOURCE" >/dev/null; do
+    echo "Waiting for mount..."
+    sleep 5
 done
 
 cd /app

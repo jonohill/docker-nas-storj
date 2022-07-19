@@ -1,0 +1,41 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+set -e
+
+MAX_DEPTH=1
+
+move_files() {
+    local source_dir="$1"
+    local dest_dir="$2"
+    local depth="$3"
+
+    if (( depth > MAX_DEPTH )); then
+        return
+    fi
+    
+    local files
+    files="$(rclone lsf "$source_dir")"
+
+    local IFS
+    IFS=$'\n'
+    for f in $files; do
+        local source="${source_dir}${f}"
+        local dest="${dest_dir}${f}"
+
+        if [[ "$source" == */ ]]; then  # if dir
+            echo move_files "$source" "$dest" $((depth+1))
+            move_files "$source" "$dest" $((depth+1))
+            continue
+        fi
+
+        echo "Moving '$source' to '$dest'"
+        echo rclone moveto \
+            --config="$RCLONE_CONFIG" \
+            "$source" \
+            "$dest"
+    done
+    IFS=
+}
+
+move_files "$STORAGE_SOURCE" "$LOCAL_SOURCE" 0
