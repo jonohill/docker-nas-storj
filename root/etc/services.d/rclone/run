@@ -1,6 +1,11 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
+set -e
+
+umount /app/config || true
+mkdir -p /app/config
+
 rclone mount -v \
     --config="$RCLONE_CONFIG" \
     --vfs-read-chunk-size 100M \
