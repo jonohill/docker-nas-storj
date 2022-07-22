@@ -30,7 +30,7 @@ move_files() {
         fi
 
         echo "Moving '$source' to '$dest'"
-        echo rclone moveto \
+        rclone moveto \
             --config="$RCLONE_CONFIG" \
             "$source" \
             "$dest"
