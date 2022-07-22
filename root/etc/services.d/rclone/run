@@ -6,7 +6,7 @@ set -e
 umount /app/config || true
 mkdir -p /app/config
 
-rclone mount -v \
+exec rclone mount -v \
     --config="$RCLONE_CONFIG" \
     --vfs-read-chunk-size 100M \
     --cache-dir "${RCLONE_MOUNT_CACHE_DIR}" \

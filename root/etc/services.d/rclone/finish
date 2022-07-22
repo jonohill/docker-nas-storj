@@ -1,4 +1,6 @@
 #!/command/execlineb -S0
 # shellcheck shell=bash
 
+echo "~~~~~~ RCLONE EXITED ~~~~~~"
+
 /run/s6/basedir/bin/halt
