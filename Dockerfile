@@ -2,7 +2,7 @@ FROM rclone/rclone:1.60.0 AS rclone
 
 FROM ghcr.io/jonohill/docker-s6-package:3.1.1.2 AS s6
 
-FROM node:18 AS web_build
+FROM node:19 AS web_build
 
 # renovate: datasource=github-releases depName=storj/storj
 ARG STORJ_VERSION=v1.65.1
