@@ -1,6 +1,6 @@
 FROM rclone/rclone:1.60.0 AS rclone
 
-FROM ghcr.io/jonohill/docker-s6-package:3.1.1.2 AS s6
+FROM ghcr.io/jonohill/docker-s6-package:3.1.2.1 AS s6
 
 FROM node:19 AS web_build
 
