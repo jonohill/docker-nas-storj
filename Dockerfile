@@ -1,4 +1,4 @@
-FROM rclone/rclone:1.60.1 AS rclone
+FROM rclone/rclone:1.61.0 AS rclone
 
 FROM ghcr.io/jonohill/docker-s6-package:3.1.2.1 AS s6
 
