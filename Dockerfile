@@ -5,7 +5,7 @@ FROM ghcr.io/jonohill/docker-s6-package:3.1.4.1 AS s6
 FROM node:24 AS web_build
 
 # renovate: datasource=github-releases depName=storj/storj
-ARG STORJ_VERSION=v1.76.2
+ARG STORJ_VERSION=v1.147.5
 
 COPY hack.patch /tmp/hack.patch
 RUN git clone --depth 1 --branch "${STORJ_VERSION}" https://github.com/storj/storj.git /usr/src/app && \
